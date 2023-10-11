@@ -24,7 +24,7 @@ Namely, `w` belongs to the i-th language in the list above iff the i-th element 
 given by `belongsTo w` is true.
 For instance, for the word `0010`, we have that:
 ```ocaml
-belongsTo [0;0;1;0] = [true;true;true;false;false]
+belongsTo ['0';'0';'1';'0'] = [true; false; true; false; false]
 ```
 Complete the implementation of the `belongsTo` function.
 
@@ -39,12 +39,9 @@ This command enters a REPL environment. To use it, first open the Recognizer lib
 ```
 open Recognizer;;
 ```
-At this point, you can test the functions you have defined in the [lib/recognizer.ml] file.
+or write the line in the file `recognizer/.ocamlinit`.
 
-Recall to create a file `recognizer/.ocamlinit` containing the line:
-```
-open Recognizer.Main;;
-```
+At this point, you can test the functions you have defined in the [lib/recognizer.ml] file.
 
 ## Unit tests
 
