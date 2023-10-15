@@ -1,5 +1,5 @@
 open Token
-    
+open StdLabels.List 
 (* tokenize : Lexing.lexbuf -> LexingLib.Token.token list *)
 
 let rec tokenize lexbuf =
@@ -24,4 +24,25 @@ let string_of_frequencies fl =
   List.fold_left (fun s (t,n) -> s ^ ((string_of_token t) ^ " -> " ^ string_of_int n ^ "\n")) "" fl
 
 (* frequency : int -> 'a list -> ('a * int) list *)
-let frequency _ _ = failwith("TODO")
+let frequency n l = 
+
+let rec find tupl_list el = match tupl_list with
+|[]-> false
+|(a,_)::_ when (a = el) -> true
+|_::l1 -> find l1 el
+in
+
+let rec makeTupl list_el list num = match list with
+|[]-> (list_el,num)
+|b::l1 when (list_el = b) -> makeTupl list_el l1 (num+1)
+|_::l1 -> makeTupl list_el l1 num
+in
+
+let rec mainCycle num list tupl = match list with
+|[] -> tupl
+|_ when (num = 0) -> tupl
+|a::l1 when (find tupl a = false) ->  mainCycle (num-1) (l1) (tupl@[(makeTupl a list 0)])
+|_::l1 -> mainCycle (num) (l1) (tupl)
+
+in
+sort  ~cmp:(fun (_,y) (_,b) -> if(y>b) then -1 else if(y<b) then 1 else 0) (mainCycle n l [])
