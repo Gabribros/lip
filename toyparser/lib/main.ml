@@ -7,14 +7,23 @@ let parse (s : string) : ast =
   let ast = Parser.prog Lexer.read_token lexbuf in
   ast
 
-type result = int
+type result = int option
 
-let string_of_result n = string_of_int n
+let string_of_result n = match n with
+| None -> "Division by zero"
+| Some n -> string_of_int n
     
 (* eval : ast -> result *)
     
 let rec eval = function
-    Const(n) -> n
-  | Add(e1,e2) -> eval e1 + eval e2
+    Const(n) -> Some n
+  | Hex(e1) -> Some ( Option.get(e1))
+  | Negate(e1) -> Some( - Option.get(eval e1))
+  | Add(e1,e2) -> Some ( Option.get(eval e1) + Option.get(eval e2) );
+  | Minus(e1,e2) -> Some ( Option.get(eval e1) - Option.get(eval e2));
+  | Division(_,e2) when(Option.get(eval e2)  = 0) -> None;		
+  | Division(e1,e2) -> Some ( Option.get(eval e1 ) / Option.get(eval e2 ));
+  | Multiply(e1,e2) -> Some ( Option.get(eval e1 ) * Option.get(eval e2 ));
+
 
                     
