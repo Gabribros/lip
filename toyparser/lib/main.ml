@@ -17,7 +17,6 @@ let string_of_result n = match n with
     
 let rec eval = function
     Const(n) -> Some n
-  | Hex(e1) -> Some ( Option.get(e1))
   | Negate(e1) -> Some( - Option.get(eval e1))
   | Add(e1,e2) -> Some ( Option.get(eval e1) + Option.get(eval e2) );
   | Minus(e1,e2) -> Some ( Option.get(eval e1) - Option.get(eval e2));
