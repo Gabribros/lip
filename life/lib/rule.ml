@@ -1,5 +1,10 @@
+type rule = 
+|Rule of (int list * int list) 
 
-type rule = {
+
+
+(*{
   alive: int list;
   dead: int list;
 }
+*)

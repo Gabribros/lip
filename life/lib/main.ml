@@ -48,10 +48,15 @@ let count1 l = List.fold_left (fun s x -> s + (if x then 1 else 0)) 0 l
 
 let count w = List.fold_left (fun s x -> s + count1 x) 0 w
 
+(* parse : string -> Life.Rule.rule *)
 
+let parse (s : string) : rule =
+  let lexbuf = Lexing.from_string s in
+  let rule = Parser.prog Lexer.read_token lexbuf in
+  rule
 
 (*alive : bool list list -> int -> int -> Life.Rule.rule -> bool*)
-let alive w i j sb =
+let alive w i j (Rule sb) =
   let rec checkSb l n = match l with
   []-> false
   | a::_ when (a=n) -> true
@@ -61,18 +66,18 @@ in
   let alive_nb = count nb in
   if cell then (* cell is alive *)
     (* cell survives? *)
-   checkSb sb.alive alive_nb
+   checkSb (fst sb) alive_nb
   else (* cell is dead *)
     (* cell is born? *)
-    checkSb sb.dead alive_nb
+    checkSb (snd sb) alive_nb
 
-let step1 w i =
+let step1 w i rl =
   let n = List.length w in
-  List.mapi (fun j _ -> alive w i j {alive=[2;3] ;dead=[3]}) (zeroes n)
+  List.mapi (fun j _ -> alive w i j rl) (zeroes n)
 
-let step w =
+let step w rl =
   let n = List.length w in
-  List.mapi (fun i _ -> step1 w i) (zeroes n)
+  List.mapi (fun i _ -> step1 w i rl) (zeroes n)
 
 (* let step w = List.map step1 w *)
 (* let step w = w *)
@@ -84,6 +89,6 @@ let display w =
   printf "%s\n%!" (string_of_world w);
   Unix.sleepf 0.15;;
 
-let rec loop w n =
+let rec loop w n rl =
   if n=0 then (display w; w)
-  else (display w; loop (step w) (n-1))
+  else (display w; loop (step w rl) (n-1) rl)
